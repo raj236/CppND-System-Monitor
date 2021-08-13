@@ -33,10 +33,10 @@ vector<Process>& System::Processes() {
     if(!ram.empty()  && !cmd.empty() && !user.empty())
     {
       Process process(pids[i],
-                      LinuxParser::User(pids[i]),
-                      LinuxParser::Command(pids[i]),
+                      user,
+                      cmd,
                       cpuUtilization,
-                      LinuxParser::Ram(pids[i]),
+                      ram,
                       LinuxParser::UpTime(pids[i]));
       processes_v->push_back(process);
     }
