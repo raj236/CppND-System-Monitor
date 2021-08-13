@@ -26,14 +26,20 @@ vector<Process>& System::Processes() {
   for(unsigned int i = 0; i < pids.size(); i++)
   {
     float cpuUtilization = (LinuxParser::ActiveJiffies(pids[i])/sysconf(_SC_CLK_TCK));
-    cpuUtilization = 100*cpuUtilization/LinuxParser::UpTime(pids[i]);
-    Process process(pids[i],
-                    LinuxParser::User(pids[i]),
-                    LinuxParser::Command(pids[i]),
-                    cpuUtilization,
-                    LinuxParser::Ram(pids[i]),
-                    LinuxParser::UpTime(pids[i]));
-    processes_v->push_back(process);
+    cpuUtilization =   cpuUtilization/LinuxParser::UpTime(pids[i]);
+    std::string user = LinuxParser::User(pids[i]);
+    std::string cmd = LinuxParser::Command(pids[i]);
+    std::string ram = LinuxParser::Ram(pids[i]);
+    if(!ram.empty()  && !cmd.empty() && !user.empty())
+    {
+      Process process(pids[i],
+                      LinuxParser::User(pids[i]),
+                      LinuxParser::Command(pids[i]),
+                      cpuUtilization,
+                      LinuxParser::Ram(pids[i]),
+                      LinuxParser::UpTime(pids[i]));
+      processes_v->push_back(process);
+    }
   }
   return *processes_v;
 }
